@@ -31,12 +31,14 @@ public class HistoryDBHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(SmsDAO.CREATE_TABLE);
+        sqLiteDatabase.execSQL(CallDAO.CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + SmsDAO.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CallDAO.TABLE_NAME);
 
         onCreate(sqLiteDatabase);
     }

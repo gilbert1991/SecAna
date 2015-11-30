@@ -5,8 +5,8 @@ package com.gilbert.secana.data;
  */
 public class Call {
     public double id;
-    public int number;
-    public String date;
+    public String number;
+    public long date;
     public String reason;
-    public int level;
+    public double level;
 }

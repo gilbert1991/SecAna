@@ -7,7 +7,7 @@ public class Sms {
     public double id;
     public String number;
     public String content;
-    public String date;
+    public long date;
     public double level;
     public String reason;
 }

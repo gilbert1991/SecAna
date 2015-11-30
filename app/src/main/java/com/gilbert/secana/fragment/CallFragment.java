@@ -6,10 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.gilbert.secana.R;
 import com.gilbert.secana.adapter.CallAdapter;
 import com.gilbert.secana.data.Call;
+import com.gilbert.secana.sql.CallDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.List;
 public class CallFragment extends MyBaseFragment {
 
     List<Call> callList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private TextView emptyText;
 
     public static CallFragment newInstance() {
 
@@ -34,12 +38,14 @@ public class CallFragment extends MyBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_call, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) fragmentView.findViewById(R.id.rv_call);
+        recyclerView = (RecyclerView) fragmentView.findViewById(R.id.rv_call);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
 
         CallAdapter adapter = new CallAdapter(callList);
         recyclerView.setAdapter(adapter);
+
+        emptyText = (TextView) fragmentView.findViewById(R.id.tv_empty);
 
         return fragmentView;
     }
@@ -47,18 +53,22 @@ public class CallFragment extends MyBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setCallList();
     }
 
-    private void setCallList() {
-        for (int i = 0; i < 10; i++) {
-            Call call = new Call();
-            call.number = 917929123;
-            call.date = "29/11/2015";
-            call.reason = "fdsgagfdlsafhdjsalgasd";
+    @Override
+    public void onResume() {
+        super.onResume();
 
-            callList.add(call);
+        CallDAO callDAO = new CallDAO(getActivity().getApplicationContext());
+
+        if(callDAO.getCount() != 0) {
+            callList.addAll(callDAO.getAll());
+
+            emptyText.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        } else {
+            emptyText.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
         }
     }
 }

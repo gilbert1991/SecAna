@@ -3,6 +3,15 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_empty"
+        android:padding="16dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="No Records"/>
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.gilbert.secana.data.Sms;
+import com.gilbert.secana.data.Call;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +13,13 @@ import java.util.List;
 /**
  * Created by ${Gilbert} on ${31/3/15}.
  */
-public class SmsDAO {
+public class CallDAO {
 
-    public static final String TABLE_NAME = "sms";
+    public static final String TABLE_NAME = "call";
 
     public static final String KEY_ID = "_id";
 
     public static final String NUMBER_COLUMN = "number";
-    public static final String CONTENT_COLUMN = "content";
     public static final String DATE_COLUMN = "date";
     public static final String LEVEL_COLUMN = "level";
     public static final String REASON_COLUMN = "reason";
@@ -29,14 +28,13 @@ public class SmsDAO {
             "CREATE TABLE " + TABLE_NAME + " (" +
                     KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     NUMBER_COLUMN + " TEXT NOT NULL, " +
-                    CONTENT_COLUMN + " TEXT NOT NULL, " +
                     DATE_COLUMN + " INTEGER NOT NULL, " +
                     LEVEL_COLUMN + " INTEGER, " +
                     REASON_COLUMN + " TEXT)";
 
     private SQLiteDatabase db;
 
-    public SmsDAO(Context context) {
+    public CallDAO(Context context) {
         db = HistoryDBHelper.getDatabase(context);
     }
 
@@ -44,30 +42,28 @@ public class SmsDAO {
         db.close();
     }
 
-    public Sms insert(Sms sms) {
+    public Call insert(Call call) {
         ContentValues cv = new ContentValues();
 
-        cv.put(NUMBER_COLUMN, sms.number);
-        cv.put(CONTENT_COLUMN, sms.content);
-        cv.put(DATE_COLUMN, sms.date);
-        cv.put(LEVEL_COLUMN, sms.level);
-        cv.put(REASON_COLUMN, sms.reason);
+        cv.put(NUMBER_COLUMN, call.number);
+        cv.put(DATE_COLUMN, call.date);
+        cv.put(LEVEL_COLUMN, call.level);
+        cv.put(REASON_COLUMN, call.reason);
 
-        sms.id = db.insert(TABLE_NAME, null, cv);
+        call.id = db.insert(TABLE_NAME, null, cv);
 
-        return sms;
+        return call;
     }
 
-    public boolean update(Sms sms) {
+    public boolean update(Call call) {
         ContentValues cv = new ContentValues();
 
-        cv.put(NUMBER_COLUMN, sms.number);
-        cv.put(CONTENT_COLUMN, sms.content);
-        cv.put(DATE_COLUMN, sms.date);
-        cv.put(LEVEL_COLUMN, sms.level);
-        cv.put(REASON_COLUMN, sms.reason);
+        cv.put(NUMBER_COLUMN, call.number);
+        cv.put(DATE_COLUMN, call.date);
+        cv.put(LEVEL_COLUMN, call.level);
+        cv.put(REASON_COLUMN, call.reason);
 
-        String where = KEY_ID + "=" + sms.id;
+        String where = KEY_ID + "=" + call.id;
 
         return db.update(TABLE_NAME, cv, where, null) > 0;
     }
@@ -78,48 +74,47 @@ public class SmsDAO {
         return db.delete(TABLE_NAME, where, null) > 0;
     }
 
-    public List<Sms> getAll() {
-        List<Sms> smsList = new ArrayList<>();
+    public List<Call> getAll() {
+        List<Call> callList = new ArrayList<>();
 
         Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
-            smsList.add(getRecord(cursor));
+            callList.add(getRecord(cursor));
         }
 
         cursor.close();
 
-        return smsList;
+        return callList;
     }
 
-    public Sms get(double id) {
-        Sms sms = null;
+    public Call get(double id) {
+        Call call = null;
 
         String where = KEY_ID + "=" + id;
 
         Cursor cursor = db.query(TABLE_NAME, null, where, null, null, null, null, null);
 
         if(cursor.moveToFirst()) {
-            sms = getRecord(cursor);
+            call = getRecord(cursor);
         }
 
         cursor.close();
 
-        return sms;
+        return call;
     }
 
-    public Sms getRecord(Cursor cursor) {
+    public Call getRecord(Cursor cursor) {
 
-        Sms sms = new Sms();
+        Call call = new Call();
 
-        sms.id = cursor.getDouble(0);
-        sms.number = cursor.getString(1);
-        sms.content = cursor.getString(2);
-        sms.date = cursor.getLong(3);
-        sms.level = cursor.getDouble(4);
-        sms.reason = cursor.getString(5);
+        call.id = cursor.getDouble(0);
+        call.number = cursor.getString(1);
+        call.date = cursor.getLong(2);
+        call.level = cursor.getDouble(3);
+        call.reason = cursor.getString(4);
 
-        return sms;
+        return call;
     }
 
     public int getCount() {

@@ -10,8 +10,11 @@ import android.widget.TextView;
 import com.gilbert.secana.R;
 import com.gilbert.secana.data.Sms;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by ${Gilbert} on ${31/3/15}.
@@ -32,7 +35,7 @@ public class SmsAdapter extends RecyclerView.Adapter<SmsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Sms sms = mSmsList.get(position);
-        sms.content = position + "";
+
         holder.setHolder(sms);
     }
 
@@ -57,9 +60,22 @@ public class SmsAdapter extends RecyclerView.Adapter<SmsAdapter.ViewHolder> {
 
         public void setHolder(Sms sms) {
             numberText.setText(sms.number);
-            dateText.setText(sms.date);
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss", Locale.US);
+            dateText.setText(formatter.format(new Date(sms.date)));
+
             reasonText.setText(sms.reason);
-            levelImage.setImageResource(R.drawable.side_nav_bar);
+
+            if(sms.level == 0) {
+                levelImage.setImageResource(R.drawable.security_checked_100);
+            } else if(sms.level == 1) {
+                levelImage.setImageResource(R.drawable.question_shield_100);
+            } else if(sms.level == 2) {
+                levelImage.setImageResource(R.drawable.warning_shield_100);
+            } else if(sms.level == 3) {
+                levelImage.setImageResource(R.drawable.danger_shield_100);
+            }
+
         }
     }
 }

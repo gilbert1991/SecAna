@@ -10,8 +10,11 @@ import android.widget.TextView;
 import com.gilbert.secana.R;
 import com.gilbert.secana.data.Call;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by ${Gilbert} on ${31/3/15}.
@@ -55,10 +58,22 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.ViewHolder> {
         }
 
         public void setHolder(Call call) {
-            numberText.setText(call.number + "8");
-            dateText.setText(call.date);
+            numberText.setText(call.number);
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss", Locale.US);
+            dateText.setText(formatter.format(new Date(call.date)));
+
             reasonText.setText(call.reason);
-            levelImage.setImageResource(R.drawable.side_nav_bar);
+
+            if(call.level == 0) {
+                levelImage.setImageResource(R.drawable.security_checked_100);
+            } else if(call.level == 1) {
+                levelImage.setImageResource(R.drawable.question_shield_100);
+            } else if(call.level == 2) {
+                levelImage.setImageResource(R.drawable.warning_shield_100);
+            } else if(call.level == 3) {
+                levelImage.setImageResource(R.drawable.danger_shield_100);
+            }
         }
     }
 }
